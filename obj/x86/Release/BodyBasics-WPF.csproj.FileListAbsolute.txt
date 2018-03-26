@@ -1,0 +1,1 @@
+C:\Users\Mateusz\Documents\Kinect\BodyBasics-WPF\bin\x86\Release\BodyBasics-WPF.exe.config
