@@ -138,6 +138,7 @@
     <None Include="DatabaseMario\Mario2.0.gbd" />
     <None Include="DatabaseMario\Mario3.0.gbd" />
     <None Include="DatabaseMario\Mario4.0.gbd" />
+    <None Include="DatabaseMario\marioGameAll4.gbd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

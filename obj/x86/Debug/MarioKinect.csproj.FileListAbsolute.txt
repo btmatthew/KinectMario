@@ -115,3 +115,4 @@ C:\Users\codingSociety\Desktop\KinectMario\obj\x86\Debug\BodyBasics-WPF_MarkupCo
 C:\Users\codingSociety\Desktop\KinectMario\obj\x86\Debug\BodyBasics-WPF.g.resources
 C:\Users\codingSociety\Desktop\KinectMario\obj\x86\Debug\Microsoft.Samples.Kinect.BodyBasics.Properties.Resources.resources
 C:\Users\codingSociety\Desktop\KinectMario\obj\x86\Debug\MarioKinect.csproj.GenerateResource.Cache
+C:\Users\codingSociety\Desktop\KinectMario\obj\x86\Debug\MarioKinect.csproj.CoreCompileInputs.cache

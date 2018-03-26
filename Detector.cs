@@ -17,7 +17,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
     {
         private Boolean goRight = true;
 
-        private readonly string databaseLocation = @"C:\Users\matbu\Desktop\KinectMario\DatabaseMario\Mario3.0.gbd";
+        private readonly string databaseLocation = @"C:\Users\codingSociety\Desktop\KinectMario\DatabaseMario\marioGameAll4.gbd";
 
         /// <summary> Gesture frame source which should be tied to a body tracking ID </summary>
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
@@ -53,8 +53,8 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
         private void vgbFramereader_FrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
-            VisualGestureBuilderFrameReference frameReference = e.FrameReference;
-            using (VisualGestureBuilderFrame frame = frameReference.AcquireFrame())
+            //VisualGestureBuilderFrameReference frameReference = e.FrameReference.AcquireFrame;
+            using (VisualGestureBuilderFrame frame = e.FrameReference.AcquireFrame())
             {
                 if (frame != null)
                 {
@@ -74,10 +74,23 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                 
                                 switch (gesture.Name)
                                 {
+                                    case "jump":
+                                        if (result != null)
+                                        {
+                                            if (result.Confidence > 0.3)
+                                            {
+                                                Thread childThread = new Thread(jump);
+                                                
+                                                    childThread.Start();
+                                                
+                                                
+                                            }
+                                        }
+                                        break;
                                     case "run":
                                         if (result != null)
                                         {
-                                            if (result.Confidence > 0.75)
+                                            if (result.Confidence > 0.4)
                                             {
                                                 
                                                 if (this.goRight)
@@ -95,7 +108,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                                     Console.WriteLine(" Run Left" + result.Confidence);
                                                 }
                                             }
-                                            else if(result.Confidence<0.5)
+                                            else if(result.Confidence<0.25)
                                             {
                                                 if (this.goRight)
                                                 {
@@ -114,51 +127,52 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                             }
                                         }
                                         break;
-                                    case "jump":
+                                    
+                                    case "crawl":
                                         if (result != null)
                                         {
-                                            if (result.Confidence > 0.99)
+                                            if (result.Confidence > 0.65)
                                             {
-                                                VirtualKeyCode keyCode = VirtualKeyCode.VK_Z;
-                                                inputSimulator.Keyboard.KeyDown(keyCode); // Hold the key down
-                                                Thread.Sleep(500); 
-                                                inputSimulator.Keyboard.KeyUp(keyCode); // Release the key
-                                                Console.WriteLine(" Jump " + result.Confidence);
-                                            }
-                                        }
-                                        break;
-                                    case "crouch":
-                                        if (result != null)
-                                        {
-                                            if (result.Confidence > 0.75)
-                                            {
-                                                
-                                                VirtualKeyCode keyCode = VirtualKeyCode.VK_S;
-                                                inputSimulator.Keyboard.KeyDown(keyCode); // Hold the key down
-                                                Thread.Sleep(100);
-                                                inputSimulator.Keyboard.KeyUp(keyCode); // Release the key
+                                                Console.WriteLine("In Main: Creating the Child thread");
+                                                Thread childThread = new Thread(crouch);
+                                                childThread.Start();
 
                                                 Console.WriteLine(" down " + result.Confidence);
                                             }
                                         }
                                         break;
-                                    case "turnLeft_Left":
+                                   case "leftArm":
                                         if (result != null)
                                         {
                                             if (result.Confidence > 0.75)
                                             {
                                                 Console.WriteLine(" Left " + result.Confidence);
                                                 this.goRight = false;
+                                                run();
                                             }
                                         }
                                         break;
-                                    case "turnRight_Right":
+                                    case "rightArm":
                                         if (result != null)
                                         {
                                             if (result.Confidence > 0.75)
                                             {
                                                 Console.WriteLine(" Right " + result.Confidence);
                                                 this.goRight = true;
+                                                run();
+                                            }
+                                        }
+                                        break;
+                                    case "shooting":
+                                        if (result != null)
+                                        {
+                                            if (result.Confidence > 0.75)
+                                            {
+                                                Console.WriteLine("In Main: Creating the Child thread");
+                                                Thread childThread = new Thread(shoot);
+                                                childThread.Start();
+
+                                                Console.WriteLine(" shooting " + result.Confidence);
                                             }
                                         }
                                         break;
@@ -168,6 +182,51 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                     }
                 }
             }
+        }
+
+
+        public void shoot()
+        {
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_X); // Hold the key down
+            Thread.Sleep(100);
+            inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_X); // Release the key
+        }
+
+        public void crouch()
+        {
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_S); // Hold the key down
+            Thread.Sleep(100);
+            inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_S); // Release the key
+
+        }
+        private void jump()
+        {
+
+                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_Z); // Hold the key down
+                Thread.Sleep(500);
+                run();
+                
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_Z); // Release the key
+            }
+
+        private void run()
+        {
+            if (this.goRight)
+            {
+                VirtualKeyCode keyCode = VirtualKeyCode.VK_D;
+                inputSimulator.Keyboard.KeyDown(keyCode); // Hold the key down  
+                Thread.Sleep(100);
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_D); // Release the key
+
+            }
+            else
+            {
+                VirtualKeyCode keyCode = VirtualKeyCode.VK_A;
+                inputSimulator.Keyboard.KeyDown(keyCode); // Hold the key down
+                Thread.Sleep(100);
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.VK_A); // Release the key
+            }
+
         }
 
         /// <summary>
@@ -187,6 +246,15 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         {
             if (disposing)
             {
+                this.goRight = true;
+
+                VirtualKeyCode keyCode = VirtualKeyCode.VK_D;
+                inputSimulator.Keyboard.KeyUp(keyCode);
+
+                VirtualKeyCode keyCode1 = VirtualKeyCode.VK_A;
+                inputSimulator.Keyboard.KeyUp(keyCode1);
+
+
                 if (this.vgbFrameReader != null)
                 {
                     this.vgbFrameReader.FrameArrived -= this.vgbFramereader_FrameArrived;
